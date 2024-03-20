@@ -4,3 +4,4 @@ library
 local
 release
 node_modules
+bin/js
