@@ -1,7 +1,7 @@
 /**
  * 日志
  */
-export default class Log {
+export default class LogHelper {
     public static isDebug: boolean = true;
 
     public static log(message?: any, ...optionalParams: any[]): void
