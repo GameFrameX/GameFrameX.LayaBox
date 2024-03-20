@@ -2,13 +2,13 @@
 "use strict";
 
 var $protobuf = window.protobuf;
-$protobuf.roots.default=window;
+$protobuf.roots.default = window;
 
 // Common aliases
 var $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
 
 // Exported root namespace
-var $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
+var $root = ($protobuf.roots["default"] || ($protobuf.roots["default"] = {})).__protobuff = {};
 
 $root.Bag = (function() {
 
@@ -184,11 +184,8 @@ $root.Bag = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ReqBagInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Bag.ReqBagInfo";
+        ReqBagInfo.getTypeUrl = function getTypeUrl() {
+            return "Bag.ReqBagInfo";
         };
 
         return ReqBagInfo;
@@ -435,11 +432,8 @@ $root.Bag = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ResBagInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Bag.ResBagInfo";
+        ResBagInfo.getTypeUrl = function getTypeUrl() {
+            return "Bag.ResBagInfo";
         };
 
         return ResBagInfo;
@@ -638,11 +632,8 @@ $root.Bag = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ReqComposePet.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Bag.ReqComposePet";
+        ReqComposePet.getTypeUrl = function getTypeUrl() {
+            return "Bag.ReqComposePet";
         };
 
         return ReqComposePet;
@@ -841,11 +832,8 @@ $root.Bag = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ResComposePet.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Bag.ResComposePet";
+        ResComposePet.getTypeUrl = function getTypeUrl() {
+            return "Bag.ResComposePet";
         };
 
         return ResComposePet;
@@ -1044,11 +1032,8 @@ $root.Bag = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ReqUseItem.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Bag.ReqUseItem";
+        ReqUseItem.getTypeUrl = function getTypeUrl() {
+            return "Bag.ReqUseItem";
         };
 
         return ReqUseItem;
@@ -1247,11 +1232,8 @@ $root.Bag = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ReqSellItem.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Bag.ReqSellItem";
+        ReqSellItem.getTypeUrl = function getTypeUrl() {
+            return "Bag.ReqSellItem";
         };
 
         return ReqSellItem;
@@ -1498,11 +1480,8 @@ $root.Bag = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ResItemChange.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Bag.ResItemChange";
+        ResItemChange.getTypeUrl = function getTypeUrl() {
+            return "Bag.ResItemChange";
         };
 
         return ResItemChange;
@@ -1727,11 +1706,8 @@ $root.Basic = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ReqHeartBeat.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Basic.ReqHeartBeat";
+        ReqHeartBeat.getTypeUrl = function getTypeUrl() {
+            return "Basic.ReqHeartBeat";
         };
 
         return ReqHeartBeat;
@@ -1944,11 +1920,8 @@ $root.Basic = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        RespHeartBeat.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Basic.RespHeartBeat";
+        RespHeartBeat.getTypeUrl = function getTypeUrl() {
+            return "Basic.RespHeartBeat";
         };
 
         return RespHeartBeat;
@@ -2161,11 +2134,8 @@ $root.Basic = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ReqActorHeartBeat.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Basic.ReqActorHeartBeat";
+        ReqActorHeartBeat.getTypeUrl = function getTypeUrl() {
+            return "Basic.ReqActorHeartBeat";
         };
 
         return ReqActorHeartBeat;
@@ -2378,11 +2348,8 @@ $root.Basic = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        RespActorHeartBeat.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/Basic.RespActorHeartBeat";
+        RespActorHeartBeat.getTypeUrl = function getTypeUrl() {
+            return "Basic.RespActorHeartBeat";
         };
 
         return RespActorHeartBeat;
@@ -2728,11 +2695,8 @@ $root.common = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        UserInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/common.UserInfo";
+        UserInfo.getTypeUrl = function getTypeUrl() {
+            return "common.UserInfo";
         };
 
         return UserInfo;
@@ -2995,11 +2959,8 @@ $root.common = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        PhoneNumber.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/common.PhoneNumber";
+        PhoneNumber.getTypeUrl = function getTypeUrl() {
+            return "common.PhoneNumber";
         };
 
         return PhoneNumber;
@@ -3290,11 +3251,8 @@ $root.common = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        Person.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/common.Person";
+        Person.getTypeUrl = function getTypeUrl() {
+            return "common.Person";
         };
 
         return Person;
@@ -3514,11 +3472,8 @@ $root.common = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        AddressBook.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/common.AddressBook";
+        AddressBook.getTypeUrl = function getTypeUrl() {
+            return "common.AddressBook";
         };
 
         return AddressBook;
@@ -3845,11 +3800,8 @@ $root.user = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        ReqLogin.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/user.ReqLogin";
+        ReqLogin.getTypeUrl = function getTypeUrl() {
+            return "user.ReqLogin";
         };
 
         return ReqLogin;
@@ -4077,11 +4029,8 @@ $root.user = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        RespLogin.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/user.RespLogin";
+        RespLogin.getTypeUrl = function getTypeUrl() {
+            return "user.RespLogin";
         };
 
         return RespLogin;
@@ -4318,11 +4267,8 @@ $root.user = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        RespErrorCode.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/user.RespErrorCode";
+        RespErrorCode.getTypeUrl = function getTypeUrl() {
+            return "user.RespErrorCode";
         };
 
         return RespErrorCode;
@@ -4545,11 +4491,8 @@ $root.user = (function() {
          * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns {string} The default type url
          */
-        RespPrompt.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-            if (typeUrlPrefix === undefined) {
-                typeUrlPrefix = "type.googleapis.com";
-            }
-            return typeUrlPrefix + "/user.RespPrompt";
+        RespPrompt.getTypeUrl = function getTypeUrl() {
+            return "user.RespPrompt";
         };
 
         return RespPrompt;
