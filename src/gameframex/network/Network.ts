@@ -1,6 +1,6 @@
 import EventName from "../event/EventName";
 import EventSystems from "../event/EventSystems";
-import Log from "../log/log";
+import LogHelper from "../log/LogHelper";
 import UtilityTime from "../utility/UtilityTime";
 import { NetworkSatus } from "./NetworkSatus";
 export default class Network {
@@ -40,7 +40,7 @@ export default class Network {
     private openHandler(event: any = null): void {
         EventSystems.dispatch(EventName.SocketConnected, event);
         let dt = Laya.timer.currTimer - this._lastTick;
-        Log.log(`连接成功: host:${this._host} port:${this._port} 时长:${dt}`);
+        LogHelper.log(`连接成功: host:${this._host} port:${this._port} 时长:${dt}`);
         this.updateStatus(NetworkSatus.STATUS_CHECKING);
 
         // 校验
@@ -69,7 +69,7 @@ export default class Network {
         let len = this._recvByte.readInt32();
 
         if (len != pkgLen - 8) {
-            Log.print("receiveHandler:" + msgIdx + ':' + pkgLen);
+            LogHelper.print("receiveHandler:" + msgIdx + ':' + pkgLen);
             return;
         }
 
@@ -100,14 +100,14 @@ export default class Network {
     }
 
     private closeHandler(e: any = null): void {
-        Log.log("与服务器的连接断开了！", e);
+        LogHelper.log("与服务器的连接断开了！", e);
         EventSystems.dispatch(EventName.SocketClose, e);
         this.close();
         this.checkReconnect();
     }
 
     private errorHandler(e: any = null): void {
-        Log.log("连接出错，开始重连！", e);
+        LogHelper.log("连接出错，开始重连！", e);
         EventSystems.dispatch(EventName.SocketError, e);
         this.close();
         this.checkReconnect();
@@ -135,7 +135,7 @@ export default class Network {
     connect(host: string, port: number = 0): void {
         Laya.timer.clear(this, this.checkConnectTimeOut);
         Laya.timer.clear(this, this.continueReconnect);
-        Log.log(`开始连接: host:${host} port:${port}`);
+        LogHelper.log(`开始连接: host:${host} port:${port}`);
         if (this._socketStatus != NetworkSatus.STATUS_DISCONNECT) {
             return;
         }
@@ -201,7 +201,7 @@ export default class Network {
         if (this._socketStatus === NetworkSatus.STATUS_COMMUNICATION) {
             return;
         }
-        Log.log('计时器触发 继续重连');
+        LogHelper.log('计时器触发 继续重连');
         if (this._socketStatus != NetworkSatus.STATUS_CHECKING) {
             this.reconnect();
         }
@@ -248,7 +248,6 @@ export default class Network {
         this._sendByte.writeInt32(10000);
         this._sendByte.writeInt32(UtilityTime.getCurrentTimestampWithSecond);
         this._sendByte.writeInt32(200);
-        this.ProtoBuf.load(resPath, this.onAssetsLoaded);
         // let MsgClass = ProtobufManager.ins().getMessageClass(msgName);
         // if (!data) {
         //     data = {};
