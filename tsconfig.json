@@ -5,7 +5,7 @@
     "strict": true,
     "strictNullChecks": false,
     "noEmitHelpers": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "experimentalDecorators": true,
     "skipLibCheck": true
   },
