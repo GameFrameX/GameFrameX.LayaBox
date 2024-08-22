@@ -2,7 +2,15 @@ import Singleton from "../basic/Singleton";
 
 export default class HTTP extends Singleton<HTTP>() {
     private m_timeout = 10000;
-
+    post_async(host: string, data?: any, header_parmas?: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.post(host, data, header_parmas, Laya.Handler.create(this, (data: any) => {
+                resolve(data);
+            }), Laya.Handler.create(this, (data: any) => {
+                reject(data);
+            }))
+        });
+    }
     /**
      * 发送post请求
      * @param host 请求地址
@@ -13,6 +21,17 @@ export default class HTTP extends Singleton<HTTP>() {
      */
     post(host: string, data: any, header_parmas: any, successCallback: Laya.Handler, failedCallback?: Laya.Handler): void {
         this.request(host, data, "post", header_parmas, successCallback, failedCallback);
+    }
+
+
+    get_async(host: string, data?: any, header_parmas?: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.get(host, data, header_parmas, Laya.Handler.create(this, (data: any) => {
+                resolve(data);
+            }), Laya.Handler.create(this, (data: any) => {
+                reject(data);
+            }))
+        });
     }
 
     /**
