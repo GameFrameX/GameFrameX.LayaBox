@@ -7,11 +7,7 @@
     "noEmitHelpers": true,
     "sourceMap": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "lib": [
-      "ES2015.Promise",
-      "ES2017"
-    ]
+    "skipLibCheck": true
   },
   "include": [
     "./assets",
