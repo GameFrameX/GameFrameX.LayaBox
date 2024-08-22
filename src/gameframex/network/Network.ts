@@ -6,19 +6,23 @@ import ProtoMessageHelper from "./ProtoMessageHelper";
 import { NetworkSatus } from "./NetworkSatus";
 import MessageObject from "./MessageObject";
 class SocketData {
-    public data: any;
+    public _messageObject: MessageObject;
     public time: number = 0;
     private _uniqueId: number = 0;
     private _isRpc: boolean;
+    public get messageObject(): MessageObject {
+        return this._messageObject;
+    };
+
     public get isRpc(): boolean {
         return this._isRpc;
     };
     public get uniqueId(): number {
         return this._uniqueId;
     }
-    public constructor(_uniqueId: number, data: any, isRpc: boolean = true) {
+    public constructor(_uniqueId: number, messageObject: MessageObject, isRpc: boolean = true) {
         this._uniqueId = _uniqueId;
-        this.data = data;
+        this._messageObject = messageObject;
         this._isRpc = isRpc;
     }
 }
@@ -41,7 +45,7 @@ export default class Network {
     private _sendingMap: SocketData[] = []
     private count: number = 1000;
 
-    public call(message: {}) {
+    public call(message: MessageObject) {
         this.count++;
         let messageData: SocketData = new SocketData(this.count, message);
         this._sendWaitingMap.push(messageData);
@@ -68,7 +72,7 @@ export default class Network {
         while (this._sendingMap.length > 0) {
             let info = this._sendingMap.shift();
             if (info) {
-                this.send(info);
+                this.send(info.messageObject);
                 if (info.isRpc) {
                     this._recvWaitingMap.push(info);
                 }
