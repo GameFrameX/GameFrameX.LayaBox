@@ -1,5 +1,4 @@
 import ProtoMessageRegister from "../protobuf/ProtoMessageRegister";
-import UtilityAsset from "../utility/UtilityAsset";
 import IMessage from "./IMessage";
 
 export default class ProtoMessageHelper {
@@ -9,7 +8,7 @@ export default class ProtoMessageHelper {
     private static _messageRespMap: Map<number, IMessage> = new Map<number, IMessage>();
     public static init(): void {
         this._protobuff = (window as any).protobuf;
-        this._protobuff.load(UtilityAsset.getProtobuffList(), (err: any, root: any) => {
+        this._protobuff.load(ProtoMessageRegister.getProtoBuffList(), (err: any, root: any) => {
             if (err) {
                 console.log(err);
                 return;
