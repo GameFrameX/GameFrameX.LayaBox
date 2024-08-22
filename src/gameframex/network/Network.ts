@@ -1,12 +1,30 @@
 import EventName from "../event/EventName";
 import EventSystems from "../event/EventSystems";
 import LogHelper from "../log/LogHelper";
-import UtilityTime from "../utility/UtilityTime";
+import IMessage from "./IMessage";
+import ProtoMessageHelper from "./ProtoMessageHelper";
 import { NetworkSatus } from "./NetworkSatus";
+import MessageObject from "./MessageObject";
+class SocketData {
+    public data: any;
+    public time: number = 0;
+    private _uniqueId: number = 0;
+    private _isRpc: boolean;
+    public get isRpc(): boolean {
+        return this._isRpc;
+    };
+    public get uniqueId(): number {
+        return this._uniqueId;
+    }
+    public constructor(_uniqueId: number, data: any, isRpc: boolean = true) {
+        this._uniqueId = _uniqueId;
+        this.data = data;
+        this._isRpc = isRpc;
+    }
+}
 export default class Network {
-    public isEnterSuccess = false;
     private _reconnectCount: number = 0;
-
+    private _isReconnect: boolean = true;
     private _socket: Laya.Socket;
     private _host: string;
     private _port: number;
@@ -15,19 +33,47 @@ export default class Network {
     private _sendByte: Laya.Byte;
     private _recvByte: Laya.Byte;
     private _socketStatus: number = NetworkSatus.STATUS_DISCONNECT;
-    private _autoLoginTimes: number = 4;
     private _curSendArr: any[] = [];
     private _curSendTime: number = 0;
     private _lastRecvTime: number = 0;
+    private _sendWaitingMap: SocketData[] = []
+    private _recvWaitingMap: SocketData[] = []
+    private _sendingMap: SocketData[] = []
+    private count: number = 1000;
+
+    public call(message: {}) {
+        this.count++;
+        let messageData: SocketData = new SocketData(this.count, message);
+        this._sendWaitingMap.push(messageData);
+    }
 
     constructor() {
+        this.count = 1000;
         this._sendByte = new Laya.Byte();
-        this._sendByte.endian = Laya.Byte.LITTLE_ENDIAN;
+        this._sendByte.endian = Laya.Byte.BIG_ENDIAN;
         this._recvByte = new Laya.Byte();
+        this._recvByte.endian = Laya.Byte.BIG_ENDIAN;
         this._socket = new Laya.Socket();
-        this._socket.endian = Laya.Byte.LITTLE_ENDIAN;
+        this._socket.endian = Laya.Byte.BIG_ENDIAN;
         this.addEvents();
-        Laya.timer.loop(2000, this, this.onHeart);
+        Laya.timer.loop(5000, this, this.onHeart);
+        Laya.timer.frameLoop(1, this, this.onFrameUpdate);
+    }
+    onFrameUpdate() {
+        if (this._socketStatus == NetworkSatus.STATUS_DISCONNECT) {
+            return;
+        }
+        this.checkSendList();
+
+        while (this._sendingMap.length > 0) {
+            let info = this._sendingMap.shift();
+            if (info) {
+                this.send(info);
+                if (info.isRpc) {
+                    this._recvWaitingMap.push(info);
+                }
+            }
+        }
     }
 
     private addEvents() {
@@ -41,7 +87,7 @@ export default class Network {
         EventSystems.dispatch(EventName.SocketConnected, event);
         let dt = Laya.timer.currTimer - this._lastTick;
         LogHelper.log(`连接成功: host:${this._host} port:${this._port} 时长:${dt}`);
-        this.updateStatus(NetworkSatus.STATUS_CHECKING);
+        this.updateStatus(NetworkSatus.STATUS_COMMUNICATION);
 
         // 校验
         if (this._onConnected) {
@@ -49,7 +95,6 @@ export default class Network {
         }
     }
 
-    private _ignoreLogMsgMap = new Map([[30, true]]);
     private receiveHandler(data: any = null): void {
         this._lastRecvTime = Laya.timer.currTimer;
         this._recvByte.clear();
@@ -57,46 +102,25 @@ export default class Network {
         this._recvByte.pos = 0;
         let pkgLen = this._recvByte.length;
 
-        if (pkgLen < 8) {
+        if (pkgLen < 16) {
             return;
         }
 
-        let msgIdx = this._recvByte.readInt32();
-        if (10000 == msgIdx) {
-            this._socket.input.clear();
-            return;
-        }
-        let len = this._recvByte.readInt32();
+        let msgTotalLength = this._recvByte.readInt32();
+        let UniqueId = this._recvByte.readInt32();
+        let MessageId = this._recvByte.readInt32();
 
-        if (len != pkgLen - 8) {
-            LogHelper.print("receiveHandler:" + msgIdx + ':' + pkgLen);
-            return;
-        }
-
-        // let msgName = ProtobufManager.ins().getMessageName(msgIdx);
-        // let MsgClass = ProtobufManager.ins().getMessageClass(msgName);
-        // let message: any = null;
-        // if (MsgClass) {
-        //     let buf = this._recvByte.readUint8Array(8, len);
-        //     message = MsgClass.decode(buf);
+        let bufferLength = this._recvByte.readInt32();
+        let messageBuffer = this._recvByte.readUint8Array(4 + 4 + 4 + 4, bufferLength);
+        LogHelper.log("receiveHandler:msgTotalLength:" + msgTotalLength + ':UniqueId:' + UniqueId + ':MessageId:' + MessageId + ':bufferLength:' + bufferLength + " ==> messageBuffer:" + messageBuffer);
+        // if (len != pkgLen - 8) {
+        //     LogHelper.print("receiveHandler:" + msgTotalLength + ':' + pkgLen);
+        //     return;
         // }
 
-        // if (!this._ignoreLogMsgMap.has(msgIdx)) {
-        //     Log.log("recv:", msgName, message ? message : "");
-        // }
-
-        // this._socket.input.clear();
-        // if (msgIdx == 2) {
-        //     this.updateStatus(NetworkSatus.STATUS_COMMUNICATION);
-        //     this.send("EnterRequest", { uid: "0" });
-        // } else if (this._socketStatus == NetworkSatus.STATUS_COMMUNICATION) {
-        //     let err_code = message ? message.err_code : 0;
-        //     if (err_code != null && err_code != 0) {
-        //         AppL.UIMgr.showErrorTips(err_code);
-        //     } else {
-        //         EventSystems.dispatch(msgName, message);
-        //     }
-        // }
+        let messageType: IMessage = ProtoMessageHelper.getMessageRespTypeByIndex(MessageId);
+        let message = messageType.decode(messageBuffer);
+        console.log(message);
     }
 
     private closeHandler(e: any = null): void {
@@ -114,6 +138,10 @@ export default class Network {
     }
 
     private checkReconnect(): void {
+        if (!this._isReconnect) {
+            return;
+        }
+        Laya.timer.once(2000, this, this.reconnect);
         // if (AppL.isAutoLogin) {
         //     if (this._autoLoginTimes == 0) {
         //         EventSystems.dispatch('AutoLoginFail');
@@ -167,7 +195,6 @@ export default class Network {
 
         this._curSendArr = [];
         Laya.timer.clear(this, this.checkSendList);
-        this.isEnterSuccess = false;
         this.updateStatus(NetworkSatus.STATUS_DISCONNECT);
         Laya.timer.clear(this, this.checkConnectTimeOut);
         Laya.timer.clear(this, this.continueReconnect);
@@ -180,8 +207,6 @@ export default class Network {
     reconnect(isClick?: boolean): void {
         if (isClick) {
             this._reconnectCount = 0;
-        } else {
-
         }
 
         if (this._reconnectCount > 2) {
@@ -215,15 +240,10 @@ export default class Network {
     }
 
     private onHeart() {
-        let dt = Laya.timer.currTimer - this._lastRecvTime;
-        // if (!AppL.DebugUtils.isDebug && dt > 45000) {
-        //     this.close(true);
-        // } else if (dt > 15000) {
-        //     if (this._socketStatus == NetworkSatus.STATUS_COMMUNICATION) {
-        //         //心跳只能在socket连接成功，且登录请求成功之后 才可以发送
-        //         this.send("GameHeart", { time: Math.floor(Laya.timer.currTimer / 1000) });
-        //     }
-        // }
+        if (this._socketStatus == NetworkSatus.STATUS_COMMUNICATION) {
+            //心跳只能在socket连接成功，且登录请求成功之后 才可以发送
+            // this.send("Basic.ReqHeartBeat", { Timestamp: Math.floor(Laya.timer.currTimer / 1000) });
+        }
     }
 
     isConnected(): boolean {
@@ -234,49 +254,41 @@ export default class Network {
         }
     }
 
-    send(msgName: string, data?: any): boolean {
+    public send(message: MessageObject): boolean {
         if (!this._socket.connected) {
             return false;
         }
-        let dt = Laya.timer.currTimer;
-        if (dt - this._curSendTime < 30) {
-            this._curSendArr.push({ msgName: msgName, data: data });
-            return true;
+
+        var MsgClass = ProtoMessageHelper.getMessageType(message.PackageName);
+        if (!MsgClass) {
+            return false;
         }
-        this._curSendTime = dt;
-        // let msgIdx = ProtobufManager.ins().getMessageIndex(msgName);
-        this._sendByte.writeInt32(10000);
-        this._sendByte.writeInt32(UtilityTime.getCurrentTimestampWithSecond);
-        this._sendByte.writeInt32(200);
-        // let MsgClass = ProtobufManager.ins().getMessageClass(msgName);
-        // if (!data) {
-        //     data = {};
-        // }
 
-        // if (MsgClass) {
-        //     var message: any = MsgClass.create(data);
-        //     var buffer = MsgClass.encode(message).finish();
-        //     this._sendByte.writeInt32(buffer.byteLength);
-        //     this._sendByte.writeArrayBuffer(buffer);
-        // } else {
-        //     this._sendByte.writeInt32(0);
-        // }
 
-        // if (10000 != msgIdx) {
-        //     Log.log("send:", msgName, "data:", data);
-        // }
+        this._sendByte.writeInt32(100);
+        this._sendByte.writeInt32(this.count);
+        this._sendByte.writeInt32(1);
+        let messageData = MsgClass.create(message);
+        var buffer = MsgClass.encode(messageData).finish();
+        this._sendByte.writeInt32(buffer.byteLength);
+        this._sendByte.writeArrayBuffer(buffer);
         this._socket.send(this._sendByte.buffer);
         this._sendByte.clear();
         this._sendByte.pos = 0;
-        // Laya.timer.once(30, this, this.checkSendList);
         return true;
     }
 
 
     checkSendList(): void {
-        let info = this._curSendArr.shift();
-        if (info) {
-            this.send(info.msgName, info.data);
+
+        if (this._socketStatus != NetworkSatus.STATUS_COMMUNICATION) {
+            return;
+        }
+        while (this._sendWaitingMap.length) {
+            let info = this._sendWaitingMap.shift();
+            if (info) {
+                this._sendingMap.push(info);
+            }
         }
     }
 }
