@@ -5,27 +5,7 @@ import IMessage from "./IMessage";
 import ProtoMessageHelper from "./ProtoMessageHelper";
 import { NetworkSatus } from "./NetworkSatus";
 import MessageObject from "./MessageObject";
-class SocketData {
-    public _messageObject: MessageObject;
-    public time: number = 0;
-    private _uniqueId: number = 0;
-    private _isRpc: boolean;
-    public get messageObject(): MessageObject {
-        return this._messageObject;
-    };
-
-    public get isRpc(): boolean {
-        return this._isRpc;
-    };
-    public get uniqueId(): number {
-        return this._uniqueId;
-    }
-    public constructor(_uniqueId: number, messageObject: MessageObject, isRpc: boolean = true) {
-        this._uniqueId = _uniqueId;
-        this._messageObject = messageObject;
-        this._isRpc = isRpc;
-    }
-}
+import NetWorkData from "./NetWorkData";
 export default class Network {
     private _reconnectCount: number = 0;
     private _isReconnect: boolean = true;
@@ -40,14 +20,14 @@ export default class Network {
     private _curSendArr: any[] = [];
     private _curSendTime: number = 0;
     private _lastRecvTime: number = 0;
-    private _sendWaitingMap: SocketData[] = []
-    private _recvWaitingMap: SocketData[] = []
-    private _sendingMap: SocketData[] = []
+    private _sendWaitingMap: NetWorkData[] = []
+    private _recvWaitingMap: NetWorkData[] = []
+    private _sendingMap: NetWorkData[] = []
     private count: number = 1000;
 
     public call(message: MessageObject) {
         this.count++;
-        let messageData: SocketData = new SocketData(this.count, message);
+        let messageData: NetWorkData = new NetWorkData(this.count, message);
         this._sendWaitingMap.push(messageData);
     }
 
@@ -99,34 +79,6 @@ export default class Network {
         }
     }
 
-    private receiveHandler(data: any = null): void {
-        this._lastRecvTime = Laya.timer.currTimer;
-        this._recvByte.clear();
-        this._recvByte.writeArrayBuffer(data);
-        this._recvByte.pos = 0;
-        let pkgLen = this._recvByte.length;
-
-        if (pkgLen < 16) {
-            return;
-        }
-
-        let msgTotalLength = this._recvByte.readInt32();
-        let UniqueId = this._recvByte.readInt32();
-        let MessageId = this._recvByte.readInt32();
-
-        let bufferLength = this._recvByte.readInt32();
-        let messageBuffer = this._recvByte.readUint8Array(4 + 4 + 4 + 4, bufferLength);
-        LogHelper.log("receiveHandler:msgTotalLength:" + msgTotalLength + ':UniqueId:' + UniqueId + ':MessageId:' + MessageId + ':bufferLength:' + bufferLength + " ==> messageBuffer:" + messageBuffer);
-        // if (len != pkgLen - 8) {
-        //     LogHelper.print("receiveHandler:" + msgTotalLength + ':' + pkgLen);
-        //     return;
-        // }
-
-        let messageType: IMessage = ProtoMessageHelper.getMessageRespTypeByIndex(MessageId);
-        let message = messageType.decode(messageBuffer);
-        console.log(message);
-    }
-
     private closeHandler(e: any = null): void {
         LogHelper.log("与服务器的连接断开了！", e);
         EventSystems.dispatch(EventName.SocketClose, e);
@@ -146,17 +98,6 @@ export default class Network {
             return;
         }
         Laya.timer.once(2000, this, this.reconnect);
-        // if (AppL.isAutoLogin) {
-        //     if (this._autoLoginTimes == 0) {
-        //         EventSystems.dispatch('AutoLoginFail');
-        //         return;
-        //     } else {
-        //         Laya.timer.once(100, Platform, Platform.enterGame);
-        //     }
-        //     this._autoLoginTimes--;
-        // } else {
-        //     Laya.timer.once(2000, this, this.reconnect);
-        // }
     }
     //------------------------------事件结束------------------------------
 
@@ -264,27 +205,56 @@ export default class Network {
         }
 
         var MsgClass = ProtoMessageHelper.getMessageType(message.PackageName);
+        var messageId = ProtoMessageHelper.getMessageIdByModule(message.PackageName);
         if (!MsgClass) {
             return false;
         }
 
-
-        this._sendByte.writeInt32(100);
-        this._sendByte.writeInt32(this.count);
-        this._sendByte.writeInt32(1);
         let messageData = MsgClass.create(message);
         var buffer = MsgClass.encode(messageData).finish();
-        this._sendByte.writeInt32(buffer.byteLength);
+        let len = 12 + buffer.byteLength;
+        this._sendByte.writeUint16(len); // length
+        this._sendByte.writeByte(4);// operationType
+        this._sendByte.writeByte(0); // zipFlag
+        this._sendByte.writeInt32(message.UniqueId); // uniqueId
+        this._sendByte.writeInt32(messageId); // uniqueId
         this._sendByte.writeArrayBuffer(buffer);
         this._socket.send(this._sendByte.buffer);
         this._sendByte.clear();
         this._sendByte.pos = 0;
         return true;
     }
+    private receiveHandler(data: any = null): void {
+        this._lastRecvTime = Laya.timer.currTimer;
+        this._recvByte.clear();
+        this._recvByte.writeArrayBuffer(data);
+        this._recvByte.pos = 0;
+        let pkgLen = this._recvByte.length;
 
+        if (pkgLen < 12) {
+            return;
+        }
+
+        let msgTotalLength = this._recvByte.readUint16();
+        //operationType
+        let operationType = this._recvByte.readByte();
+        //zipFlag
+        let zipFlag = this._recvByte.readByte();
+        let uniqueId = this._recvByte.readInt32();
+        let MessageId = this._recvByte.readInt32();
+        let messageBuffer = this._recvByte.readUint8Array(2 + 1 + 1 + 4 + 4, msgTotalLength - 12);
+
+        let messageType: IMessage = ProtoMessageHelper.getMessageRespTypeByIndex(MessageId);
+        let messageClassObject: MessageObject = new MessageObject();
+        // 解析数据结果对象
+        let message: any = messageType.decode(messageBuffer);
+        Object.assign(messageClassObject, message);
+        messageClassObject.UniqueId = uniqueId;
+        messageClassObject.MessageId = MessageId;
+        console.log(messageClassObject);
+    }
 
     checkSendList(): void {
-
         if (this._socketStatus != NetworkSatus.STATUS_COMMUNICATION) {
             return;
         }
