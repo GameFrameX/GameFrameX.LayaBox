@@ -14,9 +14,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('ShopMessage.C2S_GetShopItemList', 13107210);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.C2S_GetShopItemList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.C2S_GetShopItemList';
 
 		/// <summary>
 		/// 
@@ -38,9 +37,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('ShopMessage.S2C_GetShopItemList', 13107211);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.S2C_GetShopItemList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.S2C_GetShopItemList';
 
 		/// <summary>
 		/// 
@@ -102,9 +100,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('ShopMessage.C2S_GetLimitList', 13107212);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.C2S_GetLimitList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.C2S_GetLimitList';
 
 		/// <summary>
 		/// 
@@ -136,9 +133,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('ShopMessage.S2C_GetLimitList', 13107213);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.S2C_GetLimitList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.S2C_GetLimitList';
 
 		/// <summary>
 		/// 
@@ -200,9 +196,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('ShopMessage.C2S_GetShopPaymentList', 13107214);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.C2S_GetShopPaymentList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.C2S_GetShopPaymentList';
 
 		/// <summary>
 		/// 
@@ -219,9 +214,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('ShopMessage.S2C_GetShopPaymentList', 13107215);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.S2C_GetShopPaymentList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.S2C_GetShopPaymentList';
 
 		/// <summary>
 		/// 
@@ -263,9 +257,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('ShopMessage.C2S_GetPaymentList', 13107216);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.C2S_GetPaymentList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.C2S_GetPaymentList';
 
 		/// <summary>
 		/// 
@@ -292,9 +285,8 @@ export namespace ShopMessage {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('ShopMessage.S2C_GetPaymentList', 13107217);
 		}
-		public get PackageName(): string{
-			return 'ShopMessage.S2C_GetPaymentList';
-		}
+
+		public readonly PackageName: string = 'ShopMessage.S2C_GetPaymentList';
 
 		/// <summary>
 		/// 

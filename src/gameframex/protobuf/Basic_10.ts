@@ -14,9 +14,8 @@ export namespace Basic {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('Basic.ReqHeartBeat', 655370);
 		}
-		public get PackageName(): string{
-			return 'Basic.ReqHeartBeat';
-		}
+
+		public readonly PackageName: string = 'Basic.ReqHeartBeat';
 
 		/// <summary>
 		/// 时间戳
@@ -33,9 +32,8 @@ export namespace Basic {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('Basic.NotifyHeartBeat', 655371);
 		}
-		public get PackageName(): string{
-			return 'Basic.NotifyHeartBeat';
-		}
+
+		public readonly PackageName: string = 'Basic.NotifyHeartBeat';
 
 		/// <summary>
 		/// 时间戳

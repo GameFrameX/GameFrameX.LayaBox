@@ -29,9 +29,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('Bag.ReqBagInfo', 6553610);
 		}
-		public get PackageName(): string{
-			return 'Bag.ReqBagInfo';
-		}
+
+		public readonly PackageName: string = 'Bag.ReqBagInfo';
 
 		/// <summary>
 		/// 背包类型
@@ -48,9 +47,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('Bag.RespBagInfo', 6553611);
 		}
-		public get PackageName(): string{
-			return 'Bag.RespBagInfo';
-		}
+
+		public readonly PackageName: string = 'Bag.RespBagInfo';
 
 		/// <summary>
 		/// 
@@ -72,9 +70,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('Bag.NotifyBagInfoChanged', 6553612);
 		}
-		public get PackageName(): string{
-			return 'Bag.NotifyBagInfoChanged';
-		}
+
+		public readonly PackageName: string = 'Bag.NotifyBagInfoChanged';
 
 		/// <summary>
 		/// 变化的道具，key:道具id，value:数量
@@ -91,9 +88,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('Bag.ReqComposePet', 6553613);
 		}
-		public get PackageName(): string{
-			return 'Bag.ReqComposePet';
-		}
+
+		public readonly PackageName: string = 'Bag.ReqComposePet';
 
 		/// <summary>
 		/// 碎片id
@@ -110,9 +106,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('Bag.RespComposePet', 6553614);
 		}
-		public get PackageName(): string{
-			return 'Bag.RespComposePet';
-		}
+
+		public readonly PackageName: string = 'Bag.RespComposePet';
 
 		/// <summary>
 		/// 合成宠物的Id
@@ -134,9 +129,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('Bag.ReqUseItem', 6553615);
 		}
-		public get PackageName(): string{
-			return 'Bag.ReqUseItem';
-		}
+
+		public readonly PackageName: string = 'Bag.ReqUseItem';
 
 		/// <summary>
 		/// 道具id
@@ -153,9 +147,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('Bag.ReqSellItem', 6553616);
 		}
-		public get PackageName(): string{
-			return 'Bag.ReqSellItem';
-		}
+
+		public readonly PackageName: string = 'Bag.ReqSellItem';
 
 		/// <summary>
 		/// 道具id
@@ -172,9 +165,8 @@ export namespace Bag {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('Bag.RespItemChange', 6553617);
 		}
-		public get PackageName(): string{
-			return 'Bag.RespItemChange';
-		}
+
+		public readonly PackageName: string = 'Bag.RespItemChange';
 
 		/// <summary>
 		/// 变化的道具

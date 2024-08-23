@@ -14,9 +14,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('User.ReqLogin', 19660810);
 		}
-		public get PackageName(): string{
-			return 'User.ReqLogin';
-		}
+
+		public readonly PackageName: string = 'User.ReqLogin';
 
 		/// <summary>
 		/// 
@@ -58,9 +57,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('User.RespLogin', 19660811);
 		}
-		public get PackageName(): string{
-			return 'User.RespLogin';
-		}
+
+		public readonly PackageName: string = 'User.RespLogin';
 
 		/// <summary>
 		/// 
@@ -102,9 +100,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('User.ReqPlayerCreate', 19660812);
 		}
-		public get PackageName(): string{
-			return 'User.ReqPlayerCreate';
-		}
+
+		public readonly PackageName: string = 'User.ReqPlayerCreate';
 
 		/// <summary>
 		/// 账号ID
@@ -126,9 +123,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('User.RespPlayerCreate', 19660813);
 		}
-		public get PackageName(): string{
-			return 'User.RespPlayerCreate';
-		}
+
+		public readonly PackageName: string = 'User.RespPlayerCreate';
 
 		/// <summary>
 		/// 角色信息
@@ -150,9 +146,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('User.ReqPlayerList', 19660814);
 		}
-		public get PackageName(): string{
-			return 'User.ReqPlayerList';
-		}
+
+		public readonly PackageName: string = 'User.ReqPlayerList';
 
 		/// <summary>
 		/// 账号ID
@@ -169,9 +164,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('User.RespPlayerList', 19660815);
 		}
-		public get PackageName(): string{
-			return 'User.RespPlayerList';
-		}
+
+		public readonly PackageName: string = 'User.RespPlayerList';
 
 		/// <summary>
 		/// 角色列表
@@ -229,9 +223,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerReqMessage('User.ReqPlayerLogin', 19660816);
 		}
-		public get PackageName(): string{
-			return 'User.ReqPlayerLogin';
-		}
+
+		public readonly PackageName: string = 'User.ReqPlayerLogin';
 
 		/// <summary>
 		/// 角色ID
@@ -248,9 +241,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('User.RespPlayerLogin', 19660817);
 		}
-		public get PackageName(): string{
-			return 'User.RespPlayerLogin';
-		}
+
+		public readonly PackageName: string = 'User.RespPlayerLogin';
 
 		/// <summary>
 		/// 
@@ -282,9 +274,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('User.RespErrorCode', 19660818);
 		}
-		public get PackageName(): string{
-			return 'User.RespErrorCode';
-		}
+
+		public readonly PackageName: string = 'User.RespErrorCode';
 
 		/// <summary>
 		/// 0:表示无错误
@@ -311,9 +302,8 @@ export namespace User {
 		public static register(): void{
 			ProtoMessageHelper.registerRespMessage('User.RespPrompt', 19660819);
 		}
-		public get PackageName(): string{
-			return 'User.RespPrompt';
-		}
+
+		public readonly PackageName: string = 'User.RespPrompt';
 
 		/// <summary>
 		/// 提示信息类型（1Tip提示，2跑马灯，3插队跑马灯，4弹窗，5弹窗回到登陆，6弹窗退出游戏）
